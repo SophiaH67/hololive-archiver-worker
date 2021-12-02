@@ -22,5 +22,10 @@ pub fn peek_job() -> Job {
     let job: Job = response.json().unwrap();
     return job;
 }
-    println!("{:?}", job);
+
+pub fn pop_job() -> Job {
+    let client = reqwest::blocking::Client::new();
+    let response = client.delete(get_url("/job")).send().unwrap();
+    let job: Job = response.json().unwrap();
+    return job;
 }
