@@ -5,11 +5,11 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize)]
 #[derive(Debug)]
 pub struct Job {
-    url: String,
-    handler: String,
-    id: u32,
-    save_location: String,
-    status: String,
+    pub url: String,
+    pub handler: String,
+    pub id: u32,
+    pub save_location: String,
+    pub status: String,
 }
 
 fn get_url(path: &str) -> String {
