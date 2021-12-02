@@ -11,7 +11,7 @@ pub struct Job {
     status: String,
 }
 
-fn get_url(path: &str) -> &str{
+fn get_url(path: &str) -> String {
     let base_url = env::var("BASE_URL").unwrap_or(String::from("http://localhost:5000"));
     return format!("{}/{}", base_url, path);
 }
