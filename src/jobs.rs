@@ -11,13 +11,14 @@ struct Job {
     status: String,
 }
 
+fn get_url(path: &str) -> &str{
+    let base_url = env::var("BASE_URL").unwrap_or(String::from("http://localhost:5000"));
+    return format!("{}/{}", base_url, path);
+}
+
 pub fn peek_job() {
     let client = reqwest::blocking::Client::new();
-    // Read base_url from environment variable BASE_URL or use default value
-    let base_url = env::var("BASE_URL").unwrap_or(String::from("http://localhost:5000"));
-
-    let url = format!("{}/job", base_url);
-    let response = client.get(&url).send().unwrap();
+    let response = client.get(get_url("/job")).send().unwrap();
     let job: Job = response.json().unwrap();
     println!("{:?}", job);
 }
