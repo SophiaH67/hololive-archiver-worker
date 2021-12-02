@@ -3,7 +3,7 @@ use serde::{Deserialize};
 
 #[derive(Deserialize)]
 #[derive(Debug)]
-struct Job {
+pub struct Job {
     url: String,
     handler: String,
     id: u32,
