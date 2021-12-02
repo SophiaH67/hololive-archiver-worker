@@ -16,9 +16,11 @@ fn get_url(path: &str) -> &str{
     return format!("{}/{}", base_url, path);
 }
 
-pub fn peek_job() {
+pub fn peek_job() -> Job {
     let client = reqwest::blocking::Client::new();
     let response = client.get(get_url("/job")).send().unwrap();
     let job: Job = response.json().unwrap();
+    return job;
+}
     println!("{:?}", job);
 }
