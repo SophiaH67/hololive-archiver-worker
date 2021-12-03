@@ -16,6 +16,10 @@ fn pop_and_run_job() {
     let mut job = match jobs::pop_job() {
         Ok(job) => job,
         Err(e) => {
+            // Ignore 404's for now
+            if e.to_string().contains("expected value at line 1 column 1") {
+                return;
+            }
             println!("Could not find a job to run, retrying in 5 seconds. {}", e);
             return;
         }
