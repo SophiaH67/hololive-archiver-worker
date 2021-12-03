@@ -16,7 +16,7 @@ fn pop_and_run_job() {
     let mut job = match jobs::pop_job() {
         Ok(job) => job,
         Err(e) => {
-            println!("Could not find a job to run, retrying in 5 seconds. Error: {}", e);
+            println!("Could not find a job to run, retrying in 5 seconds. {}", e);
             return;
         }
     };
