@@ -11,7 +11,7 @@ pub struct Job {
     pub id: u32,
     pub save_location: String,
     pub status: String,
-    pub error: Option<String>,
+    pub error: String,
 }
 
 impl Job {
@@ -27,6 +27,12 @@ impl Job {
         let client = reqwest::blocking::Client::new();
         client.patch(get_url(format!("/job/{}", self.id).as_str())).json(&self).send().unwrap();
     }
+
+    pub fn update_error(&mut self, error: String) {
+        self.error = error;
+        let client = reqwest::blocking::Client::new();
+        client.patch(get_url(format!("/job/{}", self.id).as_str())).json(&self).send().unwrap();
+    }
 }
 
 fn get_url(path: &str) -> String {
@@ -34,9 +40,8 @@ fn get_url(path: &str) -> String {
     return format!("{}/{}", base_url, path);
 }
 
-pub fn pop_job() -> Job {
+pub fn pop_job() -> Result<Job, reqwest::Error> {
     let client = reqwest::blocking::Client::new();
     let response = client.delete(get_url("/job")).send().unwrap();
-    let job: Job = response.json().unwrap();
-    return job;
+    return response.json();
 }

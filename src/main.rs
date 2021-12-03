@@ -10,7 +10,13 @@ fn main() {
 }
 
 fn pop_and_run_job() {
-    let mut job = jobs::pop_job();
+    let mut job = match jobs::pop_job() {
+        Ok(job) => job,
+        Err(e) => {
+            println!("Could not find a job to run, retrying in 5 seconds. Error: {}", e);
+            return;
+        }
+    };
     println!("Running job for: {:?}", job.url);
     job.update_status("running".to_string());
 
@@ -19,9 +25,17 @@ fn pop_and_run_job() {
         _ => panic!("Handler not found"),
     };
 
-    let tmp_file = handler(&job.url);
+    let handler_result = handler(&job.url);
     fs::create_dir_all(job.save_folder()).unwrap();
-    let tmp_file_path = tmp_file.unwrap();
+    let tmp_file_path = match handler_result {
+        Ok(tmp_file_path) => tmp_file_path,
+        Err(e) => {
+            println!("Error: {:?}", e);
+            job.update_status("error".to_string());
+            job.update_error(e.to_string());
+            return;
+        }
+    };
     fs::copy(tmp_file_path, job.save_location.clone()).unwrap();
     fs::remove_file(tmp_file_path).unwrap();
 
