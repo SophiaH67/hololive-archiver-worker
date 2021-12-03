@@ -22,6 +22,7 @@ fn pop_and_run_job() {
     };
     println!("Running job for: {:?}", job.url);
     job.update_status("running".to_string());
+    job.update_hostname(gethostname::gethostname().to_str().unwrap().to_string());
 
     let handler = match job.handler.as_ref() {
         "yt-dlp" => yt_dlp::handle,

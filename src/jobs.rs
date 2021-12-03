@@ -12,6 +12,8 @@ pub struct Job {
     pub save_location: String,
     pub status: String,
     pub error: String,
+    pub ip: String,
+    pub hostname: String,
 }
 
 impl Job {
@@ -30,6 +32,12 @@ impl Job {
 
     pub fn update_error(&mut self, error: String) {
         self.error = error;
+        let client = reqwest::blocking::Client::new();
+        client.patch(get_url(format!("/job/{}", self.id).as_str())).json(&self).send().unwrap();
+    }
+
+    pub fn update_hostname(&mut self, hostname: String) {
+        self.hostname = hostname;
         let client = reqwest::blocking::Client::new();
         client.patch(get_url(format!("/job/{}", self.id).as_str())).json(&self).send().unwrap();
     }
