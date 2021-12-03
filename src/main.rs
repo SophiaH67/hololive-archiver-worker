@@ -2,10 +2,13 @@ mod handlers;
 mod jobs;
 pub use handlers::yt_dlp;
 use std::fs;
+use std::time::Duration;
+use std::thread::sleep;
 
 fn main() {
     loop {
         pop_and_run_job();
+        sleep(Duration::from_secs(5));
     }
 }
 
