@@ -6,6 +6,7 @@ use std::path::PathBuf;
 #[derive(Serialize)]
 #[derive(Debug)]
 pub struct Job {
+    pub automatic: bool,
     pub url: String,
     pub handler: String,
     pub id: u32,
