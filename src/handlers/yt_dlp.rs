@@ -26,7 +26,8 @@ pub fn handle(url: &str) -> Result<&'static str, String> {
                 // ERROR: This live event will begin in 3 weeks.
                 // ERROR: This live event will begin in 5 months.
 
-                let number_regex = Regex::new(r"\d+").unwrap();
+                // Regex that gets the number after "in"
+                let number_regex = Regex::new(r"in (\d+)").unwrap();
                 let number_captures = number_regex.captures(&haystack).unwrap();
                 let number = number_captures.get(0).unwrap().as_str().parse::<u64>().unwrap();
 
