@@ -13,6 +13,9 @@ pub fn handle(url: &str) -> Result<&'static str, String> {
                 let haystack = e.to_lowercase();
 
                 if !haystack.contains("this live event will begin") {
+                    if haystack.contains("no space left on device") {
+                        return Err("No space left on device".to_string());
+                    }
                     return Err(e);
                 }
 
