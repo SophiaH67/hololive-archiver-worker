@@ -17,6 +17,17 @@ pub struct Job {
 }
 
 impl Job {
+    pub fn sync(&mut self) {
+        let client = reqwest::blocking::Client::new();
+        let new_job = client.get(
+            get_url(format!("/job/{}", self.id).as_str()).as_str()
+        ).send().unwrap().json::<Job>().unwrap();
+        self.status = new_job.status.clone();
+        self.error = new_job.error.clone();
+        self.url = new_job.url.clone();
+        self.save_location = new_job.save_location.clone();
+    }
+
     pub fn save_folder(&self) -> String {
         let path = PathBuf::from(self.save_location.clone());
         let mut folder = path.parent().unwrap().to_str().unwrap().to_string();
@@ -25,18 +36,21 @@ impl Job {
     }
 
     pub fn update_status(&mut self, status: String) {
+        self.sync();
         self.status = status;
         let client = reqwest::blocking::Client::new();
         client.patch(get_url(format!("/job/{}", self.id).as_str())).json(&self).send().unwrap();
     }
 
     pub fn update_error(&mut self, error: String) {
+        self.sync();
         self.error = error;
         let client = reqwest::blocking::Client::new();
         client.patch(get_url(format!("/job/{}", self.id).as_str())).json(&self).send().unwrap();
     }
 
     pub fn update_hostname(&mut self, hostname: String) {
+        self.sync();
         self.hostname = hostname;
         let client = reqwest::blocking::Client::new();
         client.patch(get_url(format!("/job/{}", self.id).as_str())).json(&self).send().unwrap();
