@@ -1,6 +1,7 @@
 mod handlers;
 mod jobs;
 pub use handlers::yt_dlp;
+pub use handlers::ytarchive;
 use std::fs;
 use std::time::Duration;
 use std::thread::sleep;
@@ -30,6 +31,7 @@ fn pop_and_run_job() {
 
     let handler = match job.handler.as_ref() {
         "yt-dlp" => yt_dlp::handle,
+        "ytarchive" => ytarchive::handle,
         _ => panic!("Handler not found"),
     };
 
