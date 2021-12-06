@@ -36,6 +36,7 @@ fn pop_and_run_job() {
     };
 
     let handler_result = handler(&job.url);
+    println!("Creating folder {:?}", job.save_folder());
     fs::create_dir_all(job.save_folder()).unwrap();
     let tmp_file_path = match handler_result {
         Ok(tmp_file_path) => tmp_file_path,
@@ -46,6 +47,7 @@ fn pop_and_run_job() {
             return;
         }
     };
+    println!("Moving file from {:?} to {:?}", tmp_file_path, job.save_folder());
     fs::copy(tmp_file_path, job.save_location.clone()).unwrap();
     fs::remove_file(tmp_file_path).unwrap();
 
