@@ -29,6 +29,10 @@ pub fn handle(url: &str) -> Result<&'static str, String> {
             return yt_dlp::handle(url);
         }
 
-        error
+        // Return stdout if stderr is empty
+        if stderr.len() == 0 {
+            return Err(String::from_utf8_lossy(&output.stdout).to_string());
+        }
+        return error;
     }
 }
