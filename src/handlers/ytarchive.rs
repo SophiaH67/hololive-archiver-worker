@@ -28,6 +28,7 @@ pub fn handle(url: &str) -> Result<&'static str, String> {
         // Try yt-dlp if yt-archive error contains "youtube-dl"
         let ytdlp_regex = Regex::new(r"youtube-dl").unwrap();
         if ytdlp_regex.is_match(&stderr) {
+            println!("ytarchive recommends using youtube-dl, switching to yt-dlp");
             return yt_dlp::handle(url);
         }
 
