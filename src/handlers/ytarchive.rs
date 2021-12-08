@@ -31,10 +31,12 @@ pub fn handle(url: &str) -> Result<&'static str, String> {
             return yt_dlp::handle(url);
         }
 
-        // Return stdout if stderr is empty
-        if stderr.len() == 0 {
-            return Err(String::from_utf8_lossy(&output.stdout).to_string());
-        }
-        return Err(stderr.to_string());
+        // Return an error with either stdout if length of stderr is 0
+        return if stderr.len() == 0 {
+            Err(String::from_utf8_lossy(&output.stdout).into_owned())
+        } else {
+            Err(stderr.into_owned())
+        };
+
     }
 }
