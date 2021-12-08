@@ -26,8 +26,8 @@ pub fn handle(url: &str) -> Result<&'static str, String> {
             return Err(String::from("No space left on device"));
         }
         
-        // Try yt-dlp if yt-archive error contains "youtube-dl"
-        let ytdlp_regex = Regex::new(r"youtube-dl").unwrap();
+        // Try yt-dlp if yt-archive error contains "youtube-dl" or "processed"
+        let ytdlp_regex = Regex::new(r"youtube-dl|processed").unwrap();
         if ytdlp_regex.is_match(&output) {
             println!("ytarchive recommends using youtube-dl, switching to yt-dlp");
             return yt_dlp::handle(url);
