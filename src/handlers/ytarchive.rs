@@ -25,7 +25,7 @@ pub fn handle(url: &str) -> Result<&'static str, String> {
         }
         
         // Try yt-dlp if yt-archive error contains "Livestream has been processed. Use youtube-dl instead."
-        if stderr.contains("Livestream has been processed. Use youtube-dl instead.") {
+        if stderr.contains("youtube-dl") {
             return yt_dlp::handle(url);
         }
 
