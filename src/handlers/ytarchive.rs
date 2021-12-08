@@ -1,3 +1,4 @@
+use regex::Regex;
 use std::process::Command;
 use crate::yt_dlp;
 
@@ -17,15 +18,16 @@ pub fn handle(url: &str) -> Result<&'static str, String> {
         Ok("/tmp/ytarchive.mkv")
     } else {
         let stderr = String::from_utf8_lossy(&output.stderr);
-        let error = Err(stderr.to_string());
 
-        // Return custom error if "no space left on device"
-        if stderr.contains("no space left on device") {
-            return Err("No space left on device".to_string());
+        // Using regex, check if "no space left on device" is anywhere in the stderr ignoring case
+        let space_regex = Regex::new(r"no space left on device").unwrap();
+        if space_regex.is_match(&stderr) {
+            return Err(String::from("No space left on device"));
         }
         
-        // Try yt-dlp if yt-archive error contains "Livestream has been processed. Use youtube-dl instead."
-        if stderr.contains("youtube-dl") {
+        // Try yt-dlp if yt-archive error contains "youtube-dl"
+        let ytdlp_regex = Regex::new(r"youtube-dl").unwrap();
+        if ytdlp_regex.is_match(&stderr) {
             return yt_dlp::handle(url);
         }
 
@@ -33,6 +35,6 @@ pub fn handle(url: &str) -> Result<&'static str, String> {
         if stderr.len() == 0 {
             return Err(String::from_utf8_lossy(&output.stdout).to_string());
         }
-        return error;
+        return Err(stderr.to_string());
     }
 }
